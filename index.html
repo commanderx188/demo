@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TurfHub - Book & Manage Your Sports Turfs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1abc9c;
+            --primary-dark: #16a085;
+            --secondary-color: #2c3e50;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --light-bg: #ecf0f1;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #bdc3c7;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, var(--secondary-color), #34495e);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .nav-menu ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .user-profile {
+            position: relative;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            min-width: 250px;
+            margin-top: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .user-menu:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            color: var(--text-dark);
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--light-bg);
+            color: var(--primary-color);
+        }
+
+        .dropdown-menu hr {
+            margin: 0.5rem 0;
+            border: none;
+            border-top: 1px solid var(--light-bg);
+        }
+
+        /* MAIN CONTAINER */
+        .main-container {
+            min-height: calc(100vh - 80px);
+            padding: 2rem 0;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* STATS */
+        .stats-section {
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-section .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        /* FEATURES */
+        .features-section {
+            padding: 3rem 0;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 3rem;
+        }
+
+        .features-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: var(--secondary-color);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            text-align: center;
+            border-radius: 10px;
+            background: var(--light-bg);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: white;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-5px);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        /* AUTH */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+            padding: 2rem 0;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-card h2 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .auth-card p {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        .form-group.checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group.checkbox input {
+            width: auto;
+        }
+
+        /* BUTTONS */
+        .btn-primary,
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--light-bg);
+            color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-block {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* PAGE HEADER */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-header h1 {
+            color: var(--secondary-color);
+            flex: 1;
+        }
+
+        /* FILTERS */
+        .filters-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .search-input,
+        .filter-select,
+        .filter-range {
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .search-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        #priceLabel {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* TURFS GRID */
+        .turfs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .turf-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .turf-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .turf-card-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .turf-card:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .view-details-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .turf-card-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+            gap: 1rem;
+        }
+
+        .turf-card-name {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            margin: 0;
+        }
+
+        .city-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .card-location {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--light-bg);
+            border-bottom: 1px solid var(--light-bg);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .amenities-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: var(--light-bg);
+            color: var(--secondary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .btn-book {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: auto;
+            transition: background 0.3s ease;
+        }
+
+        .btn-book:hover {
+            background: var(--primary-dark);
+        }
+
+        /* DASHBOARD */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dashboard-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-actions .btn-primary,
+        .dashboard-actions .btn-secondary {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--light-bg);
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* BOOKINGS LIST */
+        .bookings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .booking-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .booking-status {
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .status-upcoming {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-completed {
+            background: #e8f5e9;
+            color: var(--success-color);
+        }
+
+        .status-cancelled {
+            background: #ffebee;
+            color: var(--danger-color);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            color: var(--secondary-color);
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--danger-color);
+        }
+
+        /* TURF FORM */
+        .turf-form fieldset {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--light-bg);
+        }
+
+        .turf-form fieldset:last-of-type {
+            border-bottom: none;
+        }
+
+        .turf-form legend {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            display: block;
+        }
+
+        .amenities-checklist {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem;
+            background: var(--light-bg);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-label:hover {
+            background: var(--border-color);
+        }
+
+        .checkbox-label input {
+            cursor: pointer;
+            width: auto;
+        }
+
+        .checkbox-label input:checked + span {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions .btn-primary,
+        .form-actions .btn-secondary {
+            flex: 1;
+        }
+
+        /* BOOKING FORM */
+        .booking-form {
+            padding: 1.5rem 0;
+        }
+
+        .turf-summary {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .turf-summary h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .turf-summary p {
+            color: var(--text-light);
+            margin-bottom: 0.3rem;
+        }
+
+        .booking-summary {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-row.total {
+            border-top: 2px solid var(--border-color);
+            border-bottom: none;
+            padding-top: 1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: var(--secondary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .auth-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .navbar .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu ul {
+                gap: 1rem;
+                flex-direction: column;
+            }
+
+            .page-header {
+                flex-direction: column;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            .booking-card {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .turfs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.4rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-section .container {
+                grid-template-columns: 1fr;
+            }
+
+            .turf-card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="container">
+            <div class="logo" onclick="navigateTo('home')"><i class="fas fa-futbol"></i> TurfHub</div>
+            <nav class="nav-menu">
+                <ul id="mainNav">
+                    <li><a onclick="navigateTo('home')">Home</a></li>
+                    <li><a onclick="navigateTo('browse')">Browse Turfs</a></li>
+                    <li id="authLink"><a onclick="navigateTo('login')">Login</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile" id="userProfile" style="display: none;">
+                <div class="user-menu">
+                    <span id="userName">User</span>
+                    <img id="userAvatar" src="https://via.placeholder.com/40" alt="Avatar" class="avatar">
+                    <div class="dropdown-menu">
+                        <a onclick="navigateTo('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                        <a onclick="navigateTo('my-bookings')"><i class="fas fa-calendar-check"></i> My Bookings</a>
+                        <a onclick="navigateTo('my-turfs')"><i class="fas fa-futbol"></i> My Turfs</a>
+                        <hr>
+                        <a onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        
+        <!-- HOME PAGE -->
+        <section id="homePage" class="page active">
+            <div class="container">
+                <section class="hero">
+                    <h1>🏟️ Welcome to TurfHub</h1>
+                    <p>Book premium football turfs or list your own facility</p>
+                    <div class="hero-buttons">
+                        <button class="btn-primary btn-lg" onclick="navigateTo('browse')">
+                            <i class="fas fa-search"></i> Browse Turfs
+                        </button>
+                        <button class="btn-secondary btn-lg" onclick="navigateTo('login')">
+                            <i class="fas fa-plus-circle"></i> List Your Turf
+                        </button>
+                    </div>
+                </section>
+
+                <section class="stats-section">
+                    <div class="container">
+                        <div class="stat-card">
+                            <h3><i class="fas fa-futbol"></i> 500+</h3>
+                            <p>Turfs Listed</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3><i class="fas fa-users"></i> 50K+</h3>
+                            <p>Happy Users</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3><i class="fas fa-star"></i> 4.7★</h3>
+                            <p>Average Rating</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3><i class="fas fa-clock"></i> 24/7</h3>
+                            <p>Support</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="features-section">
+                    <div class="container">
+                        <h2>Why Choose TurfHub?</h2>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>Easy Booking</h3>
+                                <p>Book your favorite turf in just a few clicks</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Verified Turfs</h3>
+                                <p>All turfs are verified and genuine</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-wallet"></i>
+                                <h3>Best Prices</h3>
+                                <p>Guaranteed lowest prices in the market</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-user-shield"></i>
+                                <h3>Secure Payments</h3>
+                                <p>100% secure and safe transactions</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <!-- LOGIN PAGE -->
+        <section id="loginPage" class="page">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h2>Welcome Back!</h2>
+                    <p>Login to your TurfHub account</p>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" id="loginEmail" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" id="loginPassword" required placeholder="Enter your password">
+                        </div>
+                        <button type="submit" class="btn-primary btn-block">Login</button>
+                    </form>
+                    <p class="auth-switch">Don't have an account? <a onclick="navigateTo('register')">Register here</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- REGISTER PAGE -->
+        <section id="registerPage" class="page">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h2>Join TurfHub Today!</h2>
+                    <p>Create your account and start booking turfs</p>
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> First Name</label>
+                                <input type="text" id="regFirstName" required placeholder="First Name">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Last Name</label>
+                                <input type="text" id="regLastName" required placeholder="Last Name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" id="regEmail" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Phone</label>
+                            <input type="tel" id="regPhone" required placeholder="10-digit phone number">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" id="regPassword" required placeholder="Create a strong password">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Confirm Password</label>
+                            <input type="password" id="regConfirmPassword" required placeholder="Confirm your password">
+                        </div>
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <label for="agreeTerms">I agree to Terms & Conditions</label>
+                        </div>
+                        <button type="submit" class="btn-primary btn-block">Create Account</button>
+                    </form>
+                    <p class="auth-switch">Already have an account? <a onclick="navigateTo('login')">Login here</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BROWSE TURFS PAGE -->
+        <section id="browsePage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1>Browse Available Turfs</h1>
+                </div>
+
+                <div class="filters-bar">
+                    <input type="text" id="searchTurfs" placeholder="Search by name, city..." class="search-input">
+                    <select id="cityFilter" class="filter-select">
+                        <option value="">All Cities</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="pune">Pune</option>
+                        <option value="nagpur">Nagpur</option>
+                        <option value="aurangabad">Aurangabad</option>
+                        <option value="nashik">Nashik</option>
+                    </select>
+                    <input type="range" id="priceFilter" min="200" max="2000" value="2000" class="filter-range">
+                    <span id="priceLabel">₹2000</span>
+                </div>
+
+                <div id="turfsContainer" class="turfs-grid">
+                    <!-- Turfs will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD PAGE -->
+        <section id="dashboardPage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-calendar-check"></i> Upcoming Bookings</h3>
+                        <p class="stat-number" id="upcomingCount">0</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-check-circle"></i> Completed Bookings</h3>
+                        <p class="stat-number" id="completedCount">0</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-futbol"></i> My Turfs Listed</h3>
+                        <p class="stat-number" id="turfsCount">0</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-rupee-sign"></i> Total Spent</h3>
+                        <p class="stat-number" id="totalSpent">₹0</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-actions">
+                    <button class="btn-primary" onclick="navigateTo('browse')">
+                        <i class="fas fa-search"></i> Book a Turf
+                    </button>
+                    <button class="btn-secondary" onclick="navigateTo('my-turfs')">
+                        <i class="fas fa-futbol"></i> Manage Turfs
+                    </button>
+                    <button class="btn-secondary" onclick="navigateTo('my-bookings')">
+                        <i class="fas fa-calendar-check"></i> My Bookings
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MY BOOKINGS PAGE -->
+        <section id="myBookingsPage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1><i class="fas fa-calendar-check"></i> My Bookings</h1>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="filterBookings('upcoming')">Upcoming</button>
+                    <button class="tab-btn" onclick="filterBookings('completed')">Completed</button>
+                    <button class="tab-btn" onclick="filterBookings('cancelled')">Cancelled</button>
+                </div>
+
+                <div id="bookingsContainer" class="bookings-list">
+                    <!-- Bookings will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- MY TURFS PAGE -->
+        <section id="myTurfsPage" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h1><i class="fas fa-futbol"></i> My Turfs</h1>
+                    <button class="btn-primary" onclick="openAddTurfModal()">
+                        <i class="fas fa-plus"></i> Add New Turf
+                    </button>
+                </div>
+
+                <div id="myTurfsContainer" class="turfs-grid">
+                    <!-- User's turfs will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ADD/EDIT TURF MODAL -->
+    <div id="turfModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Turf</h2>
+                <button class="close-btn" onclick="closeTurfModal()">&times;</button>
+            </div>
+
+            <form id="turfForm" onsubmit="saveTurf(event)" class="turf-form">
+                <fieldset>
+                    <legend>Basic Information</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-heading"></i> Turf Name *</label>
+                            <input type="text" id="turfName" required placeholder="e.g., Elite Football Club">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-map-marker-alt"></i> City *</label>
+                            <select id="turfCity" required>
+                                <option value="">Select City</option>
+                                <option value="mumbai">Mumbai</option>
+                                <option value="pune">Pune</option>
+                                <option value="nagpur">Nagpur</option>
+                                <option value="aurangabad">Aurangabad</option>
+                                <option value="nashik">Nashik</option>
+                                <option value="kolhapur">Kolhapur</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-map-signs"></i> Area/Locality *</label>
+                            <input type="text" id="turfArea" required placeholder="e.g., Andheri West">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-road"></i> Address *</label>
+                            <input type="text" id="turfAddress" required placeholder="Full address">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Contact & Pricing</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Phone Number *</label>
+                            <input type="tel" id="turfPhone" required placeholder="10-digit number">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-rupee-sign"></i> Price Per Hour *</label>
+                            <input type="number" id="turfPrice" required min="200" placeholder="e.g., 1000">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Turf Details</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-layer-group"></i> Surface Type *</label>
+                            <select id="turfSurface" required>
+                                <option value="">Select Surface</option>
+                                <option value="natural-grass">Natural Grass</option>
+                                <option value="artificial-turf">Artificial Turf</option>
+                                <option value="hybrid-grass">Hybrid Grass</option>
+                                <option value="concrete">Concrete</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-ruler"></i> Size (sq.m) *</label>
+                            <input type="number" id="turfSize" required placeholder="e.g., 7000">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-users"></i> Capacity *</label>
+                            <input type="number" id="turfCapacity" required min="10" max="100" placeholder="Max players">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> Operating Hours *</label>
+                            <input type="text" id="turfTimings" required placeholder="e.g., 6:00 AM - 11:00 PM">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Amenities</legend>
+                    <div class="amenities-checklist">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="amenity-check" value="Floodlights">
+                            <span><i class="fas fa-lightbulb"></i> Floodlights</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="amenity-check" value="Changing Rooms">
+                            <span><i class="fas fa-door-open"></i> Changing Rooms</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="amenity-check" value="Parking">
+                            <span><i class="fas fa-parking"></i> Parking</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="amenity-check" value="Water">
+                            <span><i class="fas fa-water"></i> Water</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="amenity-check" value="Cafeteria">
+                            <span><i class="fas fa-utensils"></i> Cafeteria</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="amenity-check" value="Locker Rooms">
+                            <span><i class="fas fa-lock"></i> Locker Rooms</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="amenity-check" value="Gym">
+                            <span><i class="fas fa-dumbbell"></i> Gym</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="amenity-check" value="First Aid">
+                            <span><i class="fas fa-first-aid"></i> First Aid</span>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Additional Info</legend>
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Description</label>
+                        <textarea id="turfDescription" rows="4" placeholder="Tell about your turf..."></textarea>
+                    </div>
+                </fieldset>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Save Turf</button>
+                    <button type="button" class="btn-secondary" onclick="closeTurfModal()">Cancel</button>
+                </div>
+
+                <input type="hidden" id="turfId">
+            </form>
+        </div>
+    </div>
+
+    <!-- BOOKING MODAL -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Your Booking</h2>
+                <button class="close-btn" onclick="closeBookingModal()">&times;</button>
+            </div>
+
+            <form id="bookingForm" onsubmit="confirmBooking(event)" class="booking-form">
+                <div class="turf-summary">
+                    <h3 id="bookingTurfName"></h3>
+                    <p id="bookingTurfLocation"></p>
+                    <p id="bookingTurfPrice"></p>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Booking Date *</label>
+                        <input type="date" id="bookingDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> From Time *</label>
+                        <select id="bookingFromTime" required>
+                            <option value="">Select Time</option>
+                            <option value="06:00">06:00 AM</option>
+                            <option value="07:00">07:00 AM</option>
+                            <option value="08:00">08:00 AM</option>
+                            <option value="17:00">05:00 PM</option>
+                            <option value="18:00">06:00 PM</option>
+                            <option value="19:00">07:00 PM</option>
+                            <option value="20:00">08:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-hourglass-end"></i> Duration (Hours) *</label>
+                        <select id="bookingDuration" required>
+                            <option value="1">1 Hour</option>
+                            <option value="2">2 Hours</option>
+                            <option value="3">3 Hours</option>
+                            <option value="4">4 Hours</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-users"></i> Number of Players</label>
+                        <input type="number" id="bookingPlayers" min="2" max="100" value="11">
+                    </div>
+                </div>
+
+                <div class="booking-summary">
+                    <div class="summary-row">
+                        <span>Hourly Rate:</span>
+                        <span id="summaryRate">₹0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Duration:</span>
+                        <span id="summaryDuration">-</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total Amount:</span>
+                        <span id="summaryTotal">₹0</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary btn-block">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div id="successModal" class="modal">
+        <div class="modal-content" style="text-align: center; max-width: 500px;">
+            <h2>✅ Success!</h2>
+            <p id="successMessage"></p>
+            <button class="btn-primary" onclick="closeSuccessModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 TurfHub. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms & Conditions</a></p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
